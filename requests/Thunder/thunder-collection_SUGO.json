@@ -1,0 +1,97 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "SUGO",
+    "dateExported": "2023-08-25T17:59:03.374Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "a43e6330-cea4-4a0d-9c85-291cacf2d8c0",
+            "name": "peticiones SWAP",
+            "containerId": "",
+            "created": "2023-08-11T15:18:04.141Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "06ffd7f1-2c71-4ce0-8b46-5298be871838",
+            "name": "General",
+            "containerId": "",
+            "created": "2023-08-16T19:39:10.406Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "e34a59f2-1336-40b1-81e1-5035ba3d2b47",
+            "colId": "d135a2dd-7631-47a1-8825-91f3a40e8d66",
+            "containerId": "a43e6330-cea4-4a0d-9c85-291cacf2d8c0",
+            "name": "swap/trabajadores",
+            "url": "http://localhost:4010/api/swap/opeadores?modulo=1&estado=2",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-08-11T15:17:46.432Z",
+            "modified": "2023-08-14T17:54:34.761Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "modulo",
+                    "value": "1",
+                    "isPath": false
+                },
+                {
+                    "name": "estado",
+                    "value": "2",
+                    "isPath": false
+                },
+                {
+                    "name": "cred",
+                    "value": "106",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "4cd708c0-0100-4638-811d-016dd49ead63",
+            "colId": "d135a2dd-7631-47a1-8825-91f3a40e8d66",
+            "containerId": "a43e6330-cea4-4a0d-9c85-291cacf2d8c0",
+            "name": "swap/ecosStatus",
+            "url": "http://localhost:4010/api/swap/ecos/incapacidad",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-08-11T15:21:45.652Z",
+            "modified": "2023-08-22T18:42:37.112Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "885a2df0-465d-4247-b604-758ef3d14be0",
+            "colId": "d135a2dd-7631-47a1-8825-91f3a40e8d66",
+            "containerId": "06ffd7f1-2c71-4ce0-8b46-5298be871838",
+            "name": "modalidades",
+            "url": "http://localhost:4010/api/modalidad",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-08-16T19:39:46.741Z",
+            "modified": "2023-08-16T19:41:04.260Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "7b65bb6e-59a5-4523-90d7-00700b27d523",
+            "colId": "d135a2dd-7631-47a1-8825-91f3a40e8d66",
+            "containerId": "06ffd7f1-2c71-4ce0-8b46-5298be871838",
+            "name": "Rutas",
+            "url": "http://localhost:4010/api/rutas",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2023-08-16T19:42:14.219Z",
+            "modified": "2023-08-16T19:42:14.219Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}

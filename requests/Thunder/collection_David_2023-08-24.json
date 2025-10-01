@@ -1,0 +1,322 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "SUGO BACK TS",
+    "dateExported": "2023-08-24T23:08:38.572Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "84b198fb-6c56-41b2-9265-597e866fe8c3",
+            "name": "Rol",
+            "containerId": "",
+            "created": "2023-07-28T18:51:32.472Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "querySwap",
+            "containerId": "",
+            "created": "2023-08-14T17:26:46.239Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "4afcbc30-fb6f-4a11-89d5-684623f16417",
+            "name": "General",
+            "containerId": "",
+            "created": "2023-08-16T21:29:23.533Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "07312ccc-ea30-4756-b471-8bf9d17b5f31",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "84b198fb-6c56-41b2-9265-597e866fe8c3",
+            "name": "GET rol",
+            "url": "http://localhost:4010/api/rol/?ruta=11",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-28T18:51:00.439Z",
+            "modified": "2023-07-28T19:48:19.647Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "ruta",
+                    "value": "11",
+                    "isPath": false
+                },
+                {
+                    "name": "mod",
+                    "value": "5",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "ecb9fec4-12f1-4643-baad-65dc6da2b3d7",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "",
+            "name": "TEST",
+            "url": "http://localhost:4010/hi",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-28T19:56:35.147Z",
+            "modified": "2023-07-28T19:56:35.147Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "bb1087bc-11a1-49a5-b5f7-e25d9bbda33e",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "84b198fb-6c56-41b2-9265-597e866fe8c3",
+            "name": "POST rol 2",
+            "url": "http://localhost:4010/api/rol",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-07-28T19:27:42.399Z",
+            "modified": "2023-07-28T19:27:42.399Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"modulo\": 4,\n  \"ruta_id\": \"108n\",\n  \"modalidad_id\": \"\",\n  \"periodo_id\": \"6\",\n  \"rol_servicios\": [\n    {\n      \"servicio\": 22,\n      \"turno\": 1,\n      \"dia\": \"2023-03-13\",\n      \"eco\": 1525,\n      \"cred\": 1171,\n      \"hr_ini\": \"06:15:00\",\n      \"hr_fin\": \"14:55:00\",\n      \"lug_ini\": \"CCP\",\n      \"lug_fin\": \"BAL\",\n      \"tipo_id\": \"0\",\n      \"estado_op_id\": \"0\"\n    },\n    {\n      \"servicio\": 22,\n      \"turno\": 2,\n      \"dia\": \"2023-03-13\",\n      \"eco\": 1525,\n      \"cred\": 1172,\n      \"hr_ini\": \"06:15:00\",\n      \"hr_fin\": \"14:55:00\",\n      \"lug_ini\": \"CCP\",\n      \"lug_fin\": \"BAL\",\n      \"tipo_id\": \"0\",\n      \"estado_op_id\": \"0\"\n    },\n    {\n      \"servicio\": 22,\n      \"turno\": 3,\n      \"dia\": \"2023-03-13\",\n      \"eco\": 1525,\n      \"cred\": 1173,\n      \"hr_ini\": \"06:15:00\",\n      \"hr_fin\": \"14:55:00\",\n      \"lug_ini\": \"CCP\",\n      \"lug_fin\": \"BAL\",\n      \"tipo_id\": \"0\",\n      \"estado_op_id\": \"0\"\n    }\n  ]\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e4cf2099-4f88-4339-bc12-502370553384",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "84b198fb-6c56-41b2-9265-597e866fe8c3",
+            "name": "DEL rol",
+            "url": "http://localhost:4010/api/rol?id=57",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2023-07-28T19:52:09.505Z",
+            "modified": "2023-07-28T19:52:09.505Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "57",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "c3299dee-6206-4640-ad2a-e20169842c9a",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "test",
+            "url": "http://localhost:4010/hi/swap",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-08-14T17:27:03.308Z",
+            "modified": "2023-08-14T17:27:03.308Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c03a0c38-8c23-43ca-a1af-5cb48a173348",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "operadores",
+            "url": "http://localhost:4010/api/swap/opeadores?estado=1&puesto=Operadores",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-08-14T18:27:11.406Z",
+            "modified": "2023-08-22T15:23:57.441Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "modulo",
+                    "value": "7",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "estado",
+                    "value": "1",
+                    "isPath": false
+                },
+                {
+                    "name": "cred",
+                    "value": "11739",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "puesto",
+                    "value": "Operadores",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "9787a74b-1c99-444e-a494-8b1b2b5fef57",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "rutas Swap",
+            "url": "http://localhost:4010/api/swap/rutas?ruta=19&modulo=7",
+            "method": "GET",
+            "sortNum": 65000,
+            "created": "2023-08-22T16:27:21.940Z",
+            "modified": "2023-08-22T18:26:40.725Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "ruta",
+                    "value": "19",
+                    "isPath": false
+                },
+                {
+                    "name": "only_cc",
+                    "value": "1",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "modulo",
+                    "value": "7",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "8ae72ce9-b399-4e60-8a8a-bdb41ab22ba0",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "status ecos",
+            "url": "http://localhost:4010/api/swap/ecos/estado?eco=5235",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-08-14T18:38:10.782Z",
+            "modified": "2023-08-22T22:17:21.663Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "modulo",
+                    "value": "1",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "estado",
+                    "value": "8",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "eco",
+                    "value": "5235",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "7ab9ac4d-0a4c-4579-be13-34c152d3d0ae",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "d47956ec-fb87-4381-994e-2f9373c61a0e",
+            "name": "incapacidad",
+            "url": "http://localhost:4010/api/swap/incapacidad?fecha=2023/08/15&concepto=6",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2023-08-16T15:28:52.881Z",
+            "modified": "2023-08-16T16:57:14.318Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "fecha",
+                    "value": "2023/08/15",
+                    "isPath": false
+                },
+                {
+                    "name": "concepto",
+                    "value": "6",
+                    "isPath": false
+                },
+                {
+                    "name": "cred",
+                    "value": "9548",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "a099a952-d252-4449-a2ad-b2e91a5b4be3",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "4afcbc30-fb6f-4a11-89d5-684623f16417",
+            "name": "rutas",
+            "url": "http://localhost:4010/api/rutas",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2023-08-16T21:30:42.516Z",
+            "modified": "2023-08-17T19:42:09.953Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "swap",
+                    "value": "11X",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "ruta",
+                    "value": "9-C",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "modalidad",
+                    "value": "",
+                    "isDisabled": true,
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "c5d067c1-6c9c-4591-baef-9104d09ff69b",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "4afcbc30-fb6f-4a11-89d5-684623f16417",
+            "name": "modalidad",
+            "url": "http://localhost:4010/api/modalidad",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2023-08-16T21:31:12.852Z",
+            "modified": "2023-08-16T21:31:12.852Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "b270cb62-4b41-4ecd-bb00-0f1822fc1e30",
+            "colId": "6ea2c29d-74db-41d7-824c-3ab42f422156",
+            "containerId": "4afcbc30-fb6f-4a11-89d5-684623f16417",
+            "name": "periodos",
+            "url": "http://localhost:4010/api/periodos?fecha=2023/07/22",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2023-08-22T17:03:45.118Z",
+            "modified": "2023-08-22T23:40:42.807Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "fecha",
+                    "value": "2023/07/22",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ]
+}

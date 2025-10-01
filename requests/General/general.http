@@ -1,0 +1,20 @@
+###
+POST http://localhost:4010/api/pruebap
+content-type: application/json
+
+{
+    "fecha_inicio": "2023/10/15",
+    "fecha_fin":    "2023/10/16",
+    "serial":       "116",
+    "hora":         "18:27"
+}
+
+###
+GET http://localhost:4010/api/pruebap
+# Authorization: token xxx
+# ?query1=aksdskamd
+# &query2=aksdskamd
+
+
+###
+GET http://localhost:4010/api/pruebap/1
