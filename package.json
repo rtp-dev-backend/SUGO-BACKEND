@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "xcopy \"src\\Rol\\templates\" \"dist\\Rol\\templates\" /E /I /Y"
   },
   "keywords": [],
   "author": "",

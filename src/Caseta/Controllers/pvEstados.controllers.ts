@@ -200,19 +200,22 @@ export const getEstados = async (req: Request, res: Response) => {
             // logging: (sql) => console.log(sql)
         })
 
-            const pages = Math.ceil(count/(limite||count))
-            // Agregar campo modulo_origen sin modificar modulo
-            const estadosConModuloOrigen = estados.map(e => ({
-                ...e.dataValues,
-                modulo_origen: e.view_pv?.modulo ?? null
-            }))
-            res.json({
-                info: {
-                    count,
-                    pages,
-                },
-                results: estadosConModuloOrigen
-            })
+        // Imprimir la data obtenida antes de responder
+        console.log('DATA OBTENIDA getEstados:', estados);
+
+        const pages = Math.ceil(count/(limite||count))
+        // Agregar campo modulo_origen sin modificar modulo
+        const estadosConModuloOrigen = estados.map(e => ({
+            ...e.dataValues,
+            modulo_origen: e.view_pv?.modulo ?? null
+        }))
+        res.json({
+            info: {
+                count,
+                pages,
+            },
+            results: estadosConModuloOrigen
+        })
     } catch(error) {
         return res.status(500).json({ message: error.message })
     }

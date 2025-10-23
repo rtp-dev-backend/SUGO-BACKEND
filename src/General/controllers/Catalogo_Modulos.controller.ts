@@ -8,8 +8,9 @@ export const getModulos = async (req: Request, res: Response) => {
     const where: any = {}
     if(modulo)   where.modulo = `${modulo}`.toUpperCase() // DEBE SER string
     try {
-        const Modulo = await Catalogo_modulos.findAll({ where })
-        res.json(Modulo[0])
+
+    const Modulos = await Catalogo_modulos.findAll({ where })
+    res.json(Modulos)
 
     } catch (error) {
         return res.status(500).json({ message: error.message })
