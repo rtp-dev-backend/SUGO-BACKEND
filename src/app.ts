@@ -20,6 +20,10 @@ import pvEcos from './Caseta/Routes/pvEcos.routes'
 import periodosRolRouter from './rol/routes/periodosRol.routes';
 import cargaRolRouter from './rol/routes/cargarRol.routes';
 import descargarPlantillaRouter from './rol/routes/descargarPlantilla.routes';
+import rolesCargadosRouter from './rol/routes/rolesCargados.routes';
+
+
+import RegistrosCasetaRolRouter from './Caseta/Routes/RegistrosCasetaRol.routes';
 
 const app = express()
 
@@ -52,7 +56,7 @@ app.use(Pruebas)
 
 app.use('/api/periodos', periodosRolRouter);
 app.use('/api/rol', cargaRolRouter);
-
+app.use('/api/rol', rolesCargadosRouter);
 // Ruta para descargar plantilla de rol
 app.use('/api/rol', descargarPlantillaRouter);
 
@@ -62,7 +66,7 @@ app.use('/api/caseta/', pvEstado);
 app.use('/api/caseta/', pvEcos);
 
 
-
+app.use('/api/caseta', RegistrosCasetaRolRouter);
 
 
 

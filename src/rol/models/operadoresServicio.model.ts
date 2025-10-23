@@ -33,3 +33,8 @@ export const OperadoresServicio = SUGO_sequelize_connection.define('operadores_s
   updatedAt: 'updated_at',
 });
 
+// Asociaciones: Servicios <-> OperadoresServicio
+// Se definen aquí para asegurar que ambos modelos están disponibles
+Servicios.hasMany(OperadoresServicio, { foreignKey: 'servicio_id', sourceKey: 'id' });
+OperadoresServicio.belongsTo(Servicios, { foreignKey: 'servicio_id', targetKey: 'id' });
+

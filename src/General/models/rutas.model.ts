@@ -1,3 +1,8 @@
+// ----------------------------------------------------
+// Modelo Sequelize para la tabla 'rutas'.
+// Representa las rutas y su información principal.
+// ----------------------------------------------------
+
 import { DataTypes, Model } from 'sequelize';
 import { SUGO_sequelize_connection } from "../../database/sugo.connection.js"
 import { IRutas } from '../interfaces/rutas';
