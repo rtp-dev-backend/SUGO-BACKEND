@@ -10,9 +10,6 @@ export async function getCasetaRegistros(req: Request, res: Response) {
 			return res.status(400).json({ error: "Faltan parámetros" });
 		}
 
-		// La consulta correcta para rango de fechas:
-		// SELECT * FROM pv_estados WHERE op_cred = ? AND tipo = 1 AND eco = ? AND momento BETWEEN fecha_inicio AND fecha_fin
-
 		const registros = await pv_estados.findAll({
 			where: {
 				op_cred,
