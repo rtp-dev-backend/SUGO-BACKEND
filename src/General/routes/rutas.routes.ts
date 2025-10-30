@@ -4,7 +4,7 @@ import { getAllRutas, getRutaByString } from '../controllers/rutas.controller';
 const router = Router();
 
 // Obtener todas las rutas
-router.get('/', getAllRutas);
+router.post('/', getAllRutas);
 
 // Buscar una ruta por su nombre (string)
 router.get('/Rutas/:ruta', getRutaByString);

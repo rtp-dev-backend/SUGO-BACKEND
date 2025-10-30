@@ -22,8 +22,11 @@ import cargaRolRouter from './rol/routes/cargarRol.routes';
 import descargarPlantillaRouter from './rol/routes/descargarPlantilla.routes';
 import rolesCargadosRouter from './rol/routes/rolesCargados.routes';
 
-
+// Consulta los registros de caseta vs rol
 import RegistrosCasetaRolRouter from './Caseta/Routes/RegistrosCasetaRol.routes';
+// Rutas de rutas autorizadas oficial
+import rutas_autorizadas from './General/routes/rutas.routes';
+
 
 const app = express()
 
@@ -54,11 +57,16 @@ app.use(Rutasxmod)
 app.use(Pruebas)
 
 
-app.use('/api/periodos', periodosRolRouter);
-app.use('/api/rol', cargaRolRouter);
-app.use('/api/rol', rolesCargadosRouter);
-// Ruta para descargar plantilla de rol
-app.use('/api/rol', descargarPlantillaRouter);
+app.use('/api/periodos', periodosRolRouter); // Rutas para manejar periodos de rol
+app.use('/api/rol', cargaRolRouter); // Rutas para cargar roles
+app.use('/api/rol', rolesCargadosRouter); // Rutas para manejar roles cargados
+app.use('/api/rol', descargarPlantillaRouter); // Ruta para descargar plantilla de rol
+
+app.use('/api/caseta', RegistrosCasetaRolRouter); // Rutas para manejar registros de caseta por rol
+
+app.use('/api/GetAllRutas', rutas_autorizadas); // Rutas autorizadas oficial
+
+
 
 app.use(ecosBitacora);
 app.use(view_trabajador);
@@ -66,7 +74,6 @@ app.use('/api/caseta/', pvEstado);
 app.use('/api/caseta/', pvEcos);
 
 
-app.use('/api/caseta', RegistrosCasetaRolRouter);
 
 
 

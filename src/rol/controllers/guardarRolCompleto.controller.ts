@@ -7,8 +7,8 @@ import { guardarRolCompletoService } from '../services/guardarRolCompleto.servic
 export const cargarRolCompleto = async (req: Request, res: Response) => {
     const transaction = await Roles.sequelize?.transaction();
     try {
-        const { nombre_archivo, subido_por, hojas, periodo, modulo } = req.body;
-        await guardarRolCompletoService({ nombre_archivo, subido_por, hojas, periodo, modulo }, transaction);
+        const { nombre_archivo, subido_por, hojas, periodo, modulo, modulo_usuario } = req.body;
+        await guardarRolCompletoService({ nombre_archivo, subido_por, hojas, periodo, modulo, modulo_usuario }, transaction);
         await transaction?.commit();
         res.status(201).json({
             message: "Archivo, roles y datos asociados guardados correctamente",
