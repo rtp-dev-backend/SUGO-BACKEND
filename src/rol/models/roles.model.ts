@@ -1,46 +1,66 @@
-/**
- * Modelo Sequelize para la tabla 'roles'.
- * Encapsula el encabezado de un rol cargado y sus relaciones.
- * - Relaciona servicios, cubredescansos, jornadas excepcionales y rutas.
- * - Permite obtener toda la información de un rol cargado.
- */
-import { DataTypes } from "sequelize";
-import { SUGO_sequelize_connection } from "../../database/sugo.connection";
-import { CargasArchivosRol } from "./cargasArchivosRol.model";
-import { Servicios } from "./servicios.model";
-import { Cubredescansos } from "./cubredescansos.model";
-import { JornadasExcepcionales } from "./jornadasExcepcionales.model";
-import { Rutas } from "../../General/models/rutas.model";
+import { DataTypes } from 'sequelize';
+import { SUGO_sequelize_connection } from '../../database/sugo.connection';
+import { IRoles } from '../interfaces/rol.interfaces';
+import { cargasArchivosRol } from './cargasArchivosRol.model';
+import { PeriodosRol } from './periodosRol.model';
+import { RutaModalidades } from '../../General/models/ruta_modalidades.model';
 
-export const Roles = SUGO_sequelize_connection.define('roles', {
-  id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true }, // ID único
-  archivo: { type: DataTypes.BIGINT, allowNull: true }, // FK archivo de carga
-  periodo: DataTypes.TEXT, // FK periodo
-  ruta: DataTypes.TEXT, // FK ruta
-  modulo: DataTypes.INTEGER, // FK módulo
-  notas: DataTypes.TEXT, // Observaciones
-  dias_impar: DataTypes.TEXT, // Días impar
-  dias_par: DataTypes.TEXT,   // Días par
-  created_at: DataTypes.DATE,
-  updated_at: DataTypes.DATE,
-}, {
-  tableName: 'roles',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-});
+export interface RolesModelInterface extends IRoles { id: number }
 
-// Relaciones con otros modelos
-CargasArchivosRol.hasMany(Roles, { foreignKey: 'archivo', sourceKey: 'id' });
-Roles.belongsTo(CargasArchivosRol, { foreignKey: 'archivo', targetKey: 'id' });
+export const Roles = SUGO_sequelize_connection.define<any, RolesModelInterface>(
+  'roles', {
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    archivo: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    periodo: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ruta_modalidad: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    modulo: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    notas: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    dias_impar: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    dias_par: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: false,
+    tableName: 'roles',
+  }
+);
 
-Roles.hasMany(Servicios, { foreignKey: 'rol_id', sourceKey: 'id' });
-Servicios.belongsTo(Roles, { foreignKey: 'rol_id', targetKey: 'id' });
+Roles.belongsTo(cargasArchivosRol, { foreignKey: 'archivo', targetKey: 'id' });
+Roles.belongsTo(PeriodosRol, { foreignKey: 'periodo', targetKey: 'id' });
+Roles.belongsTo(RutaModalidades, { foreignKey: 'ruta_modalidad', targetKey: 'id' });
+RutaModalidades.hasMany(Roles, { foreignKey: 'ruta_modalidad', sourceKey: 'id' });
 
-Roles.hasMany(Cubredescansos, { foreignKey: 'rol_id', sourceKey: 'id' });
-Cubredescansos.belongsTo(Roles, { foreignKey: 'rol_id', targetKey: 'id' });
-
-Roles.hasMany(JornadasExcepcionales, { foreignKey: 'rol_id', sourceKey: 'id' });
-JornadasExcepcionales.belongsTo(Roles, { foreignKey: 'rol_id', targetKey: 'id' });
-
-Roles.belongsTo(Rutas, { foreignKey: 'ruta', targetKey: 'id' }); // Relación con rutas

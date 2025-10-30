@@ -1,11 +1,11 @@
 import { Roles } from '../models/roles.model';
-import { CargasArchivosRol } from '../models/cargasArchivosRol.model';
-import { Servicios } from '../models/servicios.model';
-import { OperadoresServicio } from '../models/operadoresServicio.model';
-import { Horarios } from '../models/horarios.model';
-import { Cubredescansos } from '../models/cubredescansos.model';
-import { CubredescansosTurnos } from '../models/cubredescansosTurnos.model';
-import { JornadasExcepcionales } from '../models/jornadasExcepcionales.model';
+import { cargasArchivosRol } from '../models/cargasArchivosRol.model';
+import { servicios } from '../models/servicios.model';
+import { operadoresServicio } from '../models/operadoresServicio.model';
+import { horarios } from '../models/horarios.model';
+import { cubredescansos } from '../models/cubredescansos.model';
+import { cubredescansosTurnos } from '../models/cubredescansosTurnos.model';
+import { jornadasExcepcionales } from '../models/jornadasExcepcionales.model';
 import { validarHojasExcel } from '../validators/rolExcel.validator';
 
 // Función para limpiar campos de hora (evita string vacío o espacios)
@@ -24,31 +24,31 @@ function limpiarTexto(valor: any): string | null {
 
 
 
-export async function guardarRolCompletoService({ nombre_archivo, subido_por, hojas, periodo, modulo }, transaction) {
+export async function guardarRolCompletoService({ nombre_archivo, subido_por, hojas, periodo, modulo, modulo_usuario }, transaction) {
     // Validar antes de insertar y obtener ids de rutas
-    const validacion = await validarHojasExcel({ hojas, periodo, modulo });
+    const validacion = await validarHojasExcel({ hojas, periodo, modulo, modulo_usuario });
     if (!validacion.ok) {
         throw validacion.errores;
     }
     const rutasIds = validacion.rutasIds;
+    const rutaModalidadesIds = validacion.rutaModalidadesIds;
 
     // 1. Inserta los datos en CargasArchivosRol
-    const archivo = await CargasArchivosRol.create({ nombre_archivo, subido_por }, { transaction });
+    const archivo = await cargasArchivosRol.create({ nombre_archivo, subido_por }, { transaction });
     const archivoId = archivo.getDataValue('id');
 
     for (let i = 0; i < hojas.length; i++) { // Por cada hoja
         const hoja = hojas[i]; 
         const encabezado = hoja.encabezado || {}; // Obtener encabezado de la hoja
-        const rutaId = rutasIds[i] || null; // Obtener id de ruta validada
-
+        const rutaModalidadId = rutaModalidadesIds[i] || null; // Obtener id de ruta_modalidades validada
 
         // Data para crear el rol
         const rolData = {
             archivo: archivoId,
             periodo: periodo.id || null,
-            ruta: rutaId,
+            ruta_modalidad: rutaModalidadId,
             modulo: modulo || null,
-            notas: encabezado.notas?.['NOTAS:'] || null,
+            notas: encabezado.notas?.['NOTAS:'] ?? "",
             dias_impar: encabezado.impar?.[0] || null,
             dias_par: encabezado.par?.[0] || null,
         };
@@ -57,15 +57,15 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
         const rol = await Roles.create(rolData, { transaction });
         const rolId = rol.getDataValue('id');
 
-        // 3. Insertar los servicios asociados
-        for (const servicio of hoja.servicios || []) {
-
+        // 3. Insertar los servicios asociados (solo si tienen datos relevantes)
+        const serviciosFiltrados = (hoja.servicios || []).filter(s => s.economico || s.sistema);
+        for (const servicio of serviciosFiltrados) {
             const servicioData = {
                 rol_id: rolId,
                 economico: servicio.economico || null,
                 sistema: servicio.sistema || null
             }
-            const servicioCreado = await Servicios.create(
+            const servicioCreado = await servicios.create(
                 servicioData,
                 { transaction }
             );
@@ -77,7 +77,7 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                 for (const [turnoKey, operadorDataRaw] of Object.entries(servicio.turno_operadores as Record<string, { credencial: number, descansos: string[] }>)) {
                     const operadorData = operadorDataRaw as { credencial: number, descansos: string[] };
                     const turnoNum = parseInt(turnoKey.replace(/[^0-9]/g, ''), 10);
-                    const operadorCreado = await OperadoresServicio.create({
+                    const operadorCreado = await operadoresServicio.create({
                         servicio_id: servicioId,
                         turno: turnoNum,
                         operador: operadorData.credencial,
@@ -124,7 +124,7 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                         if (todosVacios) continue;
                     }
 
-                    await Horarios.create({
+                    await horarios.create({
                         servicio_id: servicioId,
                         servicio_operador_id,
                         dias_servicios: dia,
@@ -141,15 +141,19 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
             }
         }
 
+        // Filtrar cubredescansos para evitar registros vacíos
         if (hoja.cubredescansos) {
-            for (const key in hoja.cubredescansos) {
-                const cubre = hoja.cubredescansos[key];
-                // Verificar si hay algún dato útil
-                const tieneDatos = cubre['Económico'] || cubre['Sistema'] || cubre['1er Turno'] || cubre['2do Turno'] || cubre['3er Turno'] || cubre.L || cubre.M || cubre.Mi || cubre.J || cubre.V || cubre.S || cubre.D;
-                if (!tieneDatos) continue;
-
+            const cubredescansosFiltrados = Object.entries(hoja.cubredescansos).filter(([_, cubre]) => {
+                // Considera string vacío, null y undefined como vacío
+                const campos = [
+                    cubre['Económico'], cubre['Sistema'], cubre['1er Turno'], cubre['2do Turno'], cubre['3er Turno'],
+                    cubre['L'], cubre['M'], cubre['Mi'], cubre['J'], cubre['V'], cubre['S'], cubre['D']
+                ];
+                return campos.some(v => v !== null && v !== undefined && !(typeof v === 'string' && v.trim() === ''));
+            });
+            for (const [key, cubre] of cubredescansosFiltrados) {
                 // 6. Insertar el cubredescanso
-                const cubredescansoCreado = await Cubredescansos.create({
+                const cubredescansoCreado = await cubredescansos.create({
                     rol_id: rolId,
                     economico: cubre['Económico'] || null,
                     sistema: cubre['Sistema'] || null
@@ -168,22 +172,25 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                 for (let t = 1; t <= 3; t++) {
                     const operador = cubre[`${t === 1 ? '1er Turno' : t === 2 ? '2do Turno' : '3er Turno'}`];
                     if (!operador) continue;
-                    await CubredescansosTurnos.create({
+                    await cubredescansosTurnos.create({
                         cubredescanso_id: cubredescansoId,
                         turno: t,
                         operador,
                         servicios_a_cubrir
                     }, { transaction });
                 }
-
             }
+
             // 8. Insertar jornadas excepcionales (por hoja, después de servicios)
             if (hoja.jornadasExcepcionales) {
-                for (const jornada of hoja.jornadasExcepcionales) {
-                    // Verificar si hay algún dato útil
-                    const tieneDatos = jornada.Credencial || jornada.Lugar || jornada['Hora de Inicio'] || jornada['Hora de Termino'] || jornada.L || jornada.M || jornada.Mi || jornada.J || jornada.V || jornada.S || jornada.D;
-                    if (!tieneDatos) continue;
-
+                const jornadasFiltradas = hoja.jornadasExcepcionales.filter(jornada => {
+                    const campos = [
+                        jornada.Credencial, jornada.Lugar, jornada['Hora de Inicio'], jornada['Hora de Termino'],
+                        jornada.L, jornada.M, jornada.Mi, jornada.J, jornada.V, jornada.S, jornada.D
+                    ];
+                    return campos.some(v => v !== null && v !== undefined && !(typeof v === 'string' && v.trim() === ''));
+                });
+                for (const jornada of jornadasFiltradas) {
                     // Preparar objeto de días para dias_servicio (solo días con valor)
                     const dias_servicio = {};
                     ['L', 'M', 'Mi', 'J', 'V', 'S', 'D'].forEach(dia => {
@@ -192,7 +199,7 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                         }
                     });
 
-                    await JornadasExcepcionales.create({
+                    await jornadasExcepcionales.create({
                         rol_id: rolId,
                         operador: jornada.Credencial,
                         lugar: jornada.Lugar || null,

@@ -1,29 +1,37 @@
-/**
- * Modelo Sequelize para la tabla 'cargas_archivos_rol'.
- *
- * Representa el archivo cargado por el usuario, que puede contener uno o varios roles.
- *
- * Relaciones:
- * - CargasArchivosRol tiene muchos Roles (archivo_id)
- *
- * Campos:
- * - id: Identificador único del archivo
- * - nombre_archivo: Nombre del archivo subido
- * - subido_por: Id del usuario que subió el archivo
- * - created_at, updated_at: Timestamps
- */
-import { DataTypes } from "sequelize";
-import { SUGO_sequelize_connection } from "../../database/sugo.connection";
+import { DataTypes } from 'sequelize';
+import { SUGO_sequelize_connection } from '../../database/sugo.connection';
+import { ICargasArchivosRol } from '../interfaces/rol.interfaces';
 
-export const CargasArchivosRol = SUGO_sequelize_connection.define('cargas_archivos_rol', {
-  id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
-  nombre_archivo: DataTypes.TEXT,
-  subido_por: DataTypes.INTEGER,
-  created_at: DataTypes.DATE,
-  updated_at: DataTypes.DATE,
-}, {
-  tableName: 'cargas_archivos_rol',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-});
+export interface CargasArchivosRolModelInterface extends ICargasArchivosRol { id: number }
+
+export const cargasArchivosRol = SUGO_sequelize_connection.define<any, CargasArchivosRolModelInterface>(
+  'cargas_archivos_rol', {
+    id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nombre_archivo: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    subido_por: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: 'cargas_archivos_rol',
+    timestamps: false,
+  }
+);

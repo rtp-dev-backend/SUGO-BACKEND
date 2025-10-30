@@ -57,3 +57,4 @@ Rutas.init({
   tableName: 'rutas',
   timestamps: false,
 });
+

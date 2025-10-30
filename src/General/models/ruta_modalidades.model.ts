@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { SUGO_sequelize_connection } from '../../database/sugo.connection.js';
 import { Rutas } from './rutas.model';
-import { modalidad_autorizada } from './modalidad_autorizada.model';
+import { Modalidades } from './modalidades.model';
 import { IRutaModalidades } from '../interfaces/ruta_modalidades';
 
 export class RutaModalidades extends Model<IRutaModalidades> {}
@@ -46,8 +46,8 @@ RutaModalidades.belongsTo(Rutas, {
   as: 'ruta',
 });
 
-// Relación: RutaModalidades pertenece a modalidad_autorizada
-RutaModalidades.belongsTo(modalidad_autorizada, {
+// Relación: RutaModalidades pertenece a Modalidades
+RutaModalidades.belongsTo(Modalidades, {
   foreignKey: 'modalidad_id',
   targetKey: 'id',
   as: 'modalidad',
