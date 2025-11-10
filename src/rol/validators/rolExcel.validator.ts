@@ -7,6 +7,7 @@ import { Roles } from '../models/roles.model';
 
 // Validador para las hojas del Excel de roles
 export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario }: { hojas: any[], periodo: any, modulo: number, modulo_usuario: number }) {
+  
   // Validar si ya existe un rol con el mismo periodo y módulo
   const rolExistente = await Roles.findOne({
     where: {
@@ -14,17 +15,18 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
       modulo: modulo
     }
   });
-  if (modulo_usuario !== modulo || modulo_usuario === 0) { // módulo no coincide con el módulo del usuario
-    return {
-      ok: false,
-      errores: [{
-        message: `No puedes registrar un ROL si no pertences al modulo seleccionado en el formulario.`,
-        hoja: "No perteneces al modulo elegido",
-        moduloSelector: modulo_usuario,
-        moduloExcel: modulo
-      }]
-    }
-  } else if (rolExistente) { // ya existe un rol para ese periodo y módulo
+  // if (modulo_usuario !== modulo || modulo_usuario === 0) { // módulo no coincide con el módulo del usuario
+  //   return {
+  //     ok: false,
+  //     errores: [{
+  //       message: `No puedes registrar un ROL si no pertences al modulo seleccionado en el formulario.`,
+  //       hoja: "No perteneces al modulo elegido",
+  //       moduloSelector: modulo_usuario,
+  //       moduloExcel: modulo
+  //     }]
+  //   }
+  // } else
+     if (rolExistente) { // ya existe un rol para ese periodo y módulo
     return {
       ok: false,
       errores: [{
@@ -39,12 +41,18 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
   const rutasIds: number[] = [];
   const rutaModalidadesIds: (number | null)[] = [];
   const errores: any[] = [];
+  
+  // Sets globales para validar duplicados entre todas las hojas
+  const economicosGlobales = new Map<string, Array<{hoja: string, servicio: string}>>(); // economico -> [{hoja, servicio}]
+  const operadoresGlobales = new Map<string, Array<{hoja: string, servicio: string}>>(); // operador -> [{hoja, servicio}]
+  
   for (let i = 0; i < hojas.length; i++) {
     const hoja = hojas[i];
     const nombreHoja = hoja.nombre || `Hoja ${i + 1}`;
     const encabezado = hoja.encabezado || {};
     // Validar periodo
     if (!periodoCoincide(periodo, encabezado.periodo)) {
+      // console.log('Periodo no coincide:', periodo, encabezado.periodo);
       errores.push({
         message: `El periodo elegido no coincide con el periodo insertado en el excel.`,
         hoja: nombreHoja,
@@ -70,16 +78,36 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
         moduloExcel: moduloExcel
       });
     }
+    
 
-    // Validar ruta y obtener id
+    // Validar ruta y obtener id (con lógica especial para la 200)
     const rutaExcel = encabezado.ruta?.[0] || null;
-    const rutaValida = await Rutas.findOne({ where: { ruta: rutaExcel } });
-    if (!rutaValida) {
-      errores.push({
-        message: `La ruta ${rutaExcel} no coincide con las rutas autorizadas.`,
-        hoja: nombreHoja,
-        rutaExcel: rutaExcel
-      });
+    const origenExcel = (encabezado.origen?.[0] || "").trim();
+    const destinoExcel = (encabezado.destino?.[0] || "").trim();
+    let rutaValida;
+    if (rutaExcel === "200") {
+      // Solo valida destino para la ruta 200
+      rutaValida = await Rutas.findOne({ where: { ruta: rutaExcel, destino: destinoExcel } });
+      if (!rutaValida) {
+        errores.push({
+          message: `La ruta ${rutaExcel} no cuenta con destino: '${destinoExcel}'.`,
+          hoja: nombreHoja,
+          rutaExcel,
+          destinoExcel
+        });
+      }
+    } else {
+      // Valida origen y destino para las demás rutas
+      rutaValida = await Rutas.findOne({ where: { ruta: rutaExcel, origen: origenExcel, destino: destinoExcel } });
+      if (!rutaValida) {
+        errores.push({
+          message: `No se encontró una ruta autorizada con ruta: '${rutaExcel}', origen: '${origenExcel}' y destino: '${destinoExcel}'.`,
+          hoja: nombreHoja,
+          rutaExcel,
+          origenExcel,
+          destinoExcel
+        });
+      }
     }
     rutasIds.push(rutaValida ? (rutaValida as any).id : null);
 
@@ -122,8 +150,7 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
     }
     rutaModalidadesIds.push(rutaModalidadId);
 
-    // Validar servicios de la hoja
-    const economicosSet = new Set();
+    // Recopilar económicos y operadores de la hoja para validación global
     for (const servicio of hoja.servicios || []) {
       if (servicio.sistema && !servicio.economico) {
         errores.push({
@@ -132,14 +159,79 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
           servicio: servicio
         });
       }
-      if (servicio.economico && economicosSet.has(servicio.economico)) {
-        errores.push({
-          message: `El económico '${servicio.economico}' está repetido en los servicios de la hoja ${nombreHoja}.`,
-          hoja: nombreHoja,
-          servicio: servicio
+      
+      // Recopilar económicos para validación global
+      if (servicio.economico) {
+        if (!economicosGlobales.has(servicio.economico)) {
+          economicosGlobales.set(servicio.economico, []);
+        }
+        economicosGlobales.get(servicio.economico)!.push({
+          hoja: nombreHoja, 
+          servicio: servicio.no || 'Sin número'
         });
       }
-      economicosSet.add(servicio.economico);
+      
+      // Recopilar operadores para validación global
+      if (servicio.turno_operadores) {
+        // Iterar sobre cada turno para extraer las credenciales
+        Object.keys(servicio.turno_operadores).forEach(turno => {
+          const credencial = servicio.turno_operadores[turno]?.credencial;
+          if (credencial) {
+            if (!operadoresGlobales.has(credencial)) {
+              operadoresGlobales.set(credencial, []);
+            }
+            operadoresGlobales.get(credencial)!.push({
+              hoja: rutaExcel || nombreHoja,
+              servicio: servicio.no || 'Sin número'
+            });
+          }
+        });
+      }
+    }
+  }
+  
+  
+  // Validar duplicados globales de económicos
+  for (const [economico, ubicaciones] of economicosGlobales.entries()) {
+    if (ubicaciones.length > 1) {
+      // Crear mensaje con formato: "El económico 'X' está repetido en el servicio Y y en la ruta Z del servicio W."
+      const primera = ubicaciones[0];
+      const resto = ubicaciones.slice(1);
+      
+      let mensaje = `El económico '${economico}' está repetido en el servicio ${primera.servicio}`;
+      resto.forEach(u => {
+        mensaje += ` y en la ruta ${u.hoja} del servicio ${u.servicio}`;
+      });
+      mensaje += '.';
+      
+      errores.push({
+        message: mensaje,
+        hoja: primera.hoja,
+        economico,
+        ubicaciones
+      });
+    }
+  }
+  
+  // Validar duplicados globales de operadores (credenciales)
+  for (const [credencial, ubicaciones] of operadoresGlobales.entries()) {
+    if (ubicaciones.length > 1) {
+      // Crear mensaje con formato: "La credencial 'X' está repetida en el servicio Y y en la ruta Z del servicio W."
+      const primera = ubicaciones[0];
+      const resto = ubicaciones.slice(1);
+      
+      let mensaje = `La credencial '${credencial}' está repetida en el servicio ${primera.servicio}`;
+      resto.forEach(u => {
+        mensaje += ` y en la ruta ${u.hoja} del servicio ${u.servicio}`;
+      });
+      mensaje += '.';
+      
+      errores.push({
+        message: mensaje,
+        hoja: primera.hoja,
+        credencial,
+        ubicaciones
+      });
     }
   }
   if (errores.length > 0) {
@@ -177,10 +269,11 @@ function periodoCoincide(periodoSelector, periodoExcel) {
   ];
   const mesNombre = meses[parseInt(mesIni, 10) - 1];
   const anio = anioIni;
+  // Regex tolerante: 'Del', 'al', 'de' opcionales, mayúsculas/minúsculas, espacios flexibles
   const regex = new RegExp(
-    `Del\\s*${inicioDia}\\s*al\\s*${finDia}\\s*de\\s*${mesNombre}\\s*de\\s*${anio}`,
+    `(Del\\s*)?${inicioDia}\\s*(al)?\\s*${finDia}\\s*(de)?\\s*${mesNombre}\\s*(de)?\\s*${anio}`,
     "i"
   );
-
+  // console.log('Validando periodo con regex:', regex, 'en texto:', periodoExcel);
   return regex.test(periodoExcel);
 }
