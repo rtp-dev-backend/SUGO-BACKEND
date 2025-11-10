@@ -22,6 +22,18 @@ function limpiarTexto(valor: any): string | null {
     return v === '' ? null : v;
 }
 
+// Función para limpiar campos numéricos (convierte string vacío o espacios a null)
+function limpiarNumero(valor: any): number | null {
+    if (typeof valor === 'number') return valor;
+    if (typeof valor === 'string') {
+        const v = valor.trim();
+        if (v === '') return null;
+        const n = Number(v);
+        return isNaN(n) ? null : n;
+    }
+    return null;
+}
+
 
 
 export async function guardarRolCompletoService({ nombre_archivo, subido_por, hojas, periodo, modulo, modulo_usuario }, transaction) {
@@ -140,7 +152,7 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                 }
             }
         }
-
+        console.log('cubredescansos hoja:', hoja.cubredescansos);
         // Filtrar cubredescansos para evitar registros vacíos
         if (hoja.cubredescansos) {
             const cubredescansosFiltrados = Object.entries(hoja.cubredescansos).filter(([_, cubre]) => {
@@ -155,7 +167,7 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                 // 6. Insertar el cubredescanso
                 const cubredescansoCreado = await cubredescansos.create({
                     rol_id: rolId,
-                    economico: cubre['Económico'] || null,
+                    economico: limpiarNumero(cubre['Económico']),
                     sistema: cubre['Sistema'] || null
                 }, { transaction });
                 const cubredescansoId = cubredescansoCreado.getDataValue('id');
