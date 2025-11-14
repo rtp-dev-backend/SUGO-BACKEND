@@ -15,18 +15,17 @@ export async function validarHojasExcel({ hojas, periodo, modulo, modulo_usuario
       modulo: modulo
     }
   });
-  // if (modulo_usuario !== modulo || modulo_usuario === 0) { // módulo no coincide con el módulo del usuario
-  //   return {
-  //     ok: false,
-  //     errores: [{
-  //       message: `No puedes registrar un ROL si no pertences al modulo seleccionado en el formulario.`,
-  //       hoja: "No perteneces al modulo elegido",
-  //       moduloSelector: modulo_usuario,
-  //       moduloExcel: modulo
-  //     }]
-  //   }
-  // } else
-     if (rolExistente) { // ya existe un rol para ese periodo y módulo
+  if (modulo_usuario !== modulo || modulo_usuario === 0) { // módulo no coincide con el módulo del usuario
+    return {
+      ok: false,
+      errores: [{
+        message: `No puedes registrar un ROL si no pertences al modulo seleccionado en el formulario.`,
+        hoja: "No perteneces al modulo elegido",
+        moduloSelector: modulo_usuario,
+        moduloExcel: modulo
+      }]
+    }
+  } else if (rolExistente) { // ya existe un rol para ese periodo y módulo
     return {
       ok: false,
       errores: [{
