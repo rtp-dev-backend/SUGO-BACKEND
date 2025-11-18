@@ -36,8 +36,7 @@ const ConsultaRutas =`
         INNER JOIN op_ruta_punto B ON (R.ruta_destino_cve=B.punto_cve)
 `
 
-const initWhere = `WHERE R.ruta_status = 1 
-and M.mod_clave in (1,2,3,4,5,6,7)
+const initWhere = `WHERE R.ruta_status = 1
 `
 // and A.punto_nombre NOT LIKE 'M0_'
 // and A.punto_nombre NOT LIKE 'M4_'
@@ -62,7 +61,7 @@ export const getConsultaRuta = async (req: Request, res: Response) => {
         else filtros.push('R.ruta_trayecto IS NULL')
     }
 
-    if(modulo) filtros.push(`M.mod_clave = '${modulo}'`)
+    // if(modulo) filtros.push(`M.mod_clave = '${modulo}'`)
     if(modalidad) filtros.push(`MD.servicio_descrip = '${modalidad}'`)
     if(!isNaN(rutaTipo as any)) filtros.push(`R.ruta_cve_movi = ${rutaTipo}`);  // ['Ruta', 'Local', 'C.C.', 'Local', 'Escal']
 
