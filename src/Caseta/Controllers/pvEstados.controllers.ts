@@ -201,7 +201,7 @@ export const getEstados = async (req: Request, res: Response) => {
         })
 
         // Imprimir la data obtenida antes de responder
-        console.log('DATA OBTENIDA getEstados:', estados);
+        // console.log('DATA OBTENIDA getEstados:', estados);
 
         const pages = Math.ceil(count/(limite||count))
         // Agregar campo modulo_origen sin modificar modulo
@@ -384,7 +384,7 @@ export const deleteEstado = async (req: Request, res: Response) => {
         await pv_estados.update({ estatus: 0, updatedBy: cred }, { 
             where:{ id }
         })
-        console.log(id, 'delete by', cred);
+        // console.log(id, 'delete by', cred);
         return res.send({id, msg: 'delete by '+cred})
     } catch(error) {
         return res.status(500).json({ message: error.message })
