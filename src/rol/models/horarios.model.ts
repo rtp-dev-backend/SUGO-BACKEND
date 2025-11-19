@@ -17,6 +17,10 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.BIGINT,
       allowNull: false,
     },
+    servicio_operador_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     dias_servicios: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -25,7 +29,7 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.SMALLINT,
       allowNull: false,
     },
-    hora_inicio: {
+    hora_inicio_turno: {
       type: DataTypes.TIME,
       allowNull: true,
     },
@@ -37,7 +41,7 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    hora_termino: {
+    hora_termino_turno: {
       type: DataTypes.TIME,
       allowNull: true,
     },
@@ -45,12 +49,16 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.TIME,
       allowNull: true,
     },
+    lugar_termino_cc: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     termino_modulo: {
       type: DataTypes.TIME,
       allowNull: true,
     },
-    lugar_termino_cc: {
-      type: DataTypes.TEXT,
+    termino_turno: {
+      type: DataTypes.TIME,
       allowNull: true,
     },
     created_at: {
@@ -62,11 +70,7 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
-    },
-    servicio_operador_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    }
   },
   {
     timestamps: false,
