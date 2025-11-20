@@ -41,18 +41,19 @@ export interface IOperadoresServicio {
 export interface IHorarios {
   id: number;
   servicio_id: number;
+  servicio_operador_id: number;
   dias_servicios: string;
   turno: number;
-  hora_inicio?: string;
+  hora_inicio_turno?: string;
   hora_inicio_cc?: string;
   lugar_inicio?: string;
-  hora_termino?: string;
+  hora_termino_turno?: string;
   hora_termino_cc?: string;
-  termino_modulo?: string;
   lugar_termino_cc?: string;
+  termino_modulo?: string;
+  termino_turno?: string;
   created_at: Date;
   updated_at: Date;
-  servicio_operador_id: number;
 }
 
 export interface ICubredescansos {
