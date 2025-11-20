@@ -105,54 +105,99 @@ export async function guardarRolCompletoService({ nombre_archivo, subido_por, ho
                 const horariosDia = servicio[dia];
                 if (!horariosDia) continue;
 
-                // Mapea los turnos a número y operador
-                const turnosMap = {
-                    '1er Turno': 1,
-                    '2do Turno': 2,
-                    '3er Turno': 3
-                };
-
-                for (const turnoLabel in turnosMap) {
-                    const turnoNum = turnosMap[turnoLabel];
-                    const horarioTurno = horariosDia[turnoLabel];
-                    if (!horarioTurno) continue;
-
-                    // Busca el id del registro de operador_servicio para este turno
+                // Para cada operador del servicio, guarda solo el horario de su turno
+                for (const [turnoKey, operadorDataRaw] of Object.entries(servicio.turno_operadores as Record<string, { credencial: number, descansos: string[] }>)) {
+                    const turnoNum = parseInt(turnoKey.replace(/[^0-9]/g, ''), 10);
                     const servicio_operador_id = operadoresServicioIds[turnoNum];
                     if (!servicio_operador_id) continue;
 
-                    // Solo registrar horarios si no están todos los campos vacíos en sábado y domingo
-                    if ((dia === 'Sabado' || dia === 'Domingo')) {
-                        const campos = [
-                            horarioTurno['Hora inicio Turno 1'], horarioTurno['Hora inicio Turno'], horarioTurno['Hora inicio'], horarioTurno['Hora Inicio Turno'], horarioTurno['Hora inicio 2'], horarioTurno['Hora Inicio Turno 3'],
-                            horarioTurno['Hora inicio en CC'], horarioTurno['Hora inicio CC'],
-                            horarioTurno['Lugar Inicio 1'], horarioTurno['Lugar Inicio'], horarioTurno['Lugar Inicio 2'], horarioTurno['Lugar Inicio 3'],
-                            horarioTurno['Hora termino Turno 1'], horarioTurno['Hora termino Turno'], horarioTurno['Hora termino Turno 2'], horarioTurno['Hora Termino Turno 3'],
-                            horariosDia.Termino?.['Hora Termino en CC'],
-                            horariosDia.Termino?.['Termino en Modulo'],
-                            horariosDia.Termino?.['Lugar de termino CC']
-                        ];
-                        const todosVacios = campos.every(v => !v || (typeof v === 'string' && v.trim() === ''));
-                        if (todosVacios) continue;
-                    }
+                    // Mapea el turnoNum al label de horario
+                    let horarioLabel = '';
+                    if (turnoNum === 1) horarioLabel = '1er Turno';
+                    else if (turnoNum === 2) horarioLabel = '2do Turno';
+                    else if (turnoNum === 3) horarioLabel = '3er Turno';
 
-                    await horarios.create({
+                    const horarioTurno = horariosDia[horarioLabel];
+                    if (!horarioTurno) continue;
+
+                    // Verifica si hay al menos un campo relevante con datos
+                    const campos = [
+                        horarioTurno['Hora inicio Turno 1'], horarioTurno['Hora inicio Turno'], horarioTurno['Hora Inicio Turno'], horarioTurno['Hora Inicio Turno 3'], horarioTurno['Hora inicio 2'], horarioTurno['Hora inicio'],
+                        horarioTurno['Hora inicio en CC'], horarioTurno['Hora inicio CC'],
+                        horarioTurno['Lugar Inicio 1'], horarioTurno['Lugar Inicio'], horarioTurno['Lugar Inicio 2'], horarioTurno['Lugar Inicio 3'],
+                        horarioTurno['Hora termino Turno 1'], horarioTurno['Hora termino Turno'], horarioTurno['Hora término Turno'], horarioTurno['Hora termino Turno 2'], horarioTurno['Hora Termino Turno 3'],
+                        horariosDia.Termino?.['Hora Termino en CC'], horarioTurno['Hora Termino en CC'], horarioTurno['Hora término en CC'],
+                        horariosDia.Termino?.['Lugar de termino CC'], horarioTurno['Lugar de término CC'], horarioTurno['Lugar de termino CC'],
+                        horariosDia.Termino?.['Termino en Modulo'], horarioTurno['Termino en Modulo'],
+                        horariosDia.Termino?.['Termino del Turno'], horarioTurno['Termino del Turno']
+                    ];
+                    const todosVacios = campos.every(v => v === null || v === undefined || (typeof v === 'string' && v.trim() === ''));
+                    if (todosVacios) continue;
+
+                    // Construye insertData con solo los campos que corresponden al turno
+                    const insertData: any = {
                         servicio_id: servicioId,
                         servicio_operador_id,
                         dias_servicios: dia,
-                        turno: turnoNum,
-                        hora_inicio: limpiarHora(horarioTurno['Hora inicio Turno 1'] || horarioTurno['Hora inicio Turno'] || horarioTurno['Hora inicio'] || horarioTurno['Hora Inicio Turno'] || horarioTurno['Hora inicio 2'] || horarioTurno['Hora Inicio Turno 3']),
-                        hora_inicio_cc: limpiarHora(horarioTurno['Hora inicio en CC'] || horarioTurno['Hora inicio CC']),
-                        lugar_inicio: limpiarTexto(horarioTurno['Lugar Inicio 1'] || horarioTurno['Lugar Inicio'] || horarioTurno['Lugar Inicio 2'] || horarioTurno['Lugar Inicio 3']),
-                        hora_termino: limpiarHora(horarioTurno['Hora termino Turno 1'] || horarioTurno['Hora termino Turno'] || horarioTurno['Hora termino Turno 2'] || horarioTurno['Hora Termino Turno 3']),
-                        hora_termino_cc: limpiarHora(horariosDia.Termino?.['Hora Termino en CC']),
-                        termino_modulo: limpiarHora(horariosDia.Termino?.['Termino en Modulo']),
-                        lugar_termino_cc: limpiarTexto(horariosDia.Termino?.['Lugar de termino CC'])
-                    }, { transaction });
+                        turno: turnoNum
+                    };
+
+                    if (turnoNum === 1) {
+                        // 1er turno: Hora inicio Turno, Hora inicio en CC, Lugar inicio, Hora termino Turno
+                        insertData.hora_inicio_turno = limpiarHora(
+                            horarioTurno['Hora inicio Turno 1'] ||
+                            horarioTurno['Hora inicio Turno'] ||
+                            horarioTurno['Hora Inicio Turno'] ||
+                            horarioTurno['Hora inicio'] ||
+                            horarioTurno['Hora inicio 2']
+                        );
+                        insertData.hora_inicio_cc = limpiarHora(
+                            horarioTurno['Hora inicio en CC'] || horarioTurno['Hora inicio CC']
+                        );
+                        insertData.lugar_inicio = limpiarTexto(
+                            horarioTurno['Lugar Inicio 1'] || horarioTurno['Lugar Inicio'] || horarioTurno['Lugar Inicio 2']
+                        );
+                        insertData.hora_termino_turno = limpiarHora(
+                            horarioTurno['Hora termino Turno 1'] || horarioTurno['Hora termino Turno'] || horarioTurno['Hora término Turno']
+                        );
+                    } else if (turnoNum === 2) {
+                        // 2do turno: Lugar Inicio, Hora inicio, Hora termino Turno
+                        insertData.lugar_inicio = limpiarTexto(
+                            horarioTurno['Lugar Inicio'] || horarioTurno['Lugar Inicio 2']
+                        );
+                        insertData.hora_inicio_turno = limpiarHora(
+                            horarioTurno['Hora inicio'] || horarioTurno['Hora inicio 2']
+                        );
+                        insertData.hora_termino_turno = limpiarHora(
+                            horarioTurno['Hora termino Turno'] || horarioTurno['Hora termino Turno 2'] || horarioTurno['Hora término Turno']
+                        );
+                    } else if (turnoNum === 3) {
+                        // 3er turno: Lugar Inicio, Hora Inicio Turno, Hora Termino en CC, Lugar de termino CC, Termino en Modulo, Termino del Turno
+                        insertData.lugar_inicio = limpiarTexto(
+                            horarioTurno['Lugar Inicio 3'] || horarioTurno['Lugar Inicio']
+                        );
+                        insertData.hora_inicio_turno = limpiarHora(
+                            horarioTurno['Hora Inicio Turno 3'] || horarioTurno['Hora Inicio Turno'] || horarioTurno['Hora inicio']
+                        );
+                        insertData.hora_termino_cc = limpiarHora(
+                            horariosDia.Termino?.['Hora Termino en CC'] || horarioTurno['Hora Termino en CC'] || horarioTurno['Hora término en CC']
+                        );
+                        insertData.lugar_termino_cc = limpiarTexto(
+                            horariosDia.Termino?.['Lugar de termino CC'] || horarioTurno['Lugar de término CC'] || horarioTurno['Lugar de termino CC']
+                        );
+                        insertData.termino_modulo = limpiarHora(
+                            horariosDia.Termino?.['Termino en Modulo']
+                        );
+                        insertData.termino_turno = limpiarHora(
+                            horariosDia.Termino?.['Termino del Turno']
+                        );
+                    }
+
+                    await horarios.create(insertData, { transaction });
                 }
             }
         }
-        console.log('cubredescansos hoja:', hoja.cubredescansos);
+        // console.log('cubredescansos hoja:', hoja.cubredescansos);
         // Filtrar cubredescansos para evitar registros vacíos
         if (hoja.cubredescansos) {
             const cubredescansosFiltrados = Object.entries(hoja.cubredescansos).filter(([_, cubre]) => {
