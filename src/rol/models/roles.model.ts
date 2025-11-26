@@ -52,6 +52,11 @@ export const Roles = SUGO_sequelize_connection.define<any, RolesModelInterface>(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,

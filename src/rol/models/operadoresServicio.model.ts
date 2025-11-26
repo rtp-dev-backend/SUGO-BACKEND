@@ -38,6 +38,11 @@ export const operadoresServicio = SUGO_sequelize_connection.define<any, Operador
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,

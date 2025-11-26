@@ -34,6 +34,11 @@ export const servicios = SUGO_sequelize_connection.define<any, ServiciosModelInt
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,

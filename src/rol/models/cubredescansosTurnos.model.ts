@@ -38,6 +38,11 @@ export const cubredescansosTurnos = SUGO_sequelize_connection.define<any, Cubred
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,

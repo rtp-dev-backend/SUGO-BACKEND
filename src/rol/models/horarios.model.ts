@@ -70,6 +70,11 @@ export const horarios = SUGO_sequelize_connection.define<any, HorariosModelInter
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
+    },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     }
   },
   {

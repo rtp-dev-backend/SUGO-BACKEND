@@ -29,6 +29,11 @@ export const cargasArchivosRol = SUGO_sequelize_connection.define<any, CargasArc
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     tableName: 'cargas_archivos_rol',

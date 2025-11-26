@@ -46,6 +46,11 @@ export const jornadasExcepcionales = SUGO_sequelize_connection.define<any, Jorna
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
+		estado: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: true,
+		},
 	},
 	{
 		timestamps: false,
