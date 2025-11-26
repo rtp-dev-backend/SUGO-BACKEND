@@ -4,6 +4,7 @@ export interface ICargasArchivosRol {
   subido_por?: number;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface IRoles {
@@ -17,6 +18,7 @@ export interface IRoles {
   updated_at: Date;
   dias_impar?: string;
   dias_par?: string;
+  estado: boolean;
 }
 
 export interface IServicios {
@@ -26,6 +28,7 @@ export interface IServicios {
   sistema: string;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface IOperadoresServicio {
@@ -36,6 +39,7 @@ export interface IOperadoresServicio {
   descansos: string[];
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface IHorarios {
@@ -54,6 +58,7 @@ export interface IHorarios {
   termino_turno?: string;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface ICubredescansos {
@@ -63,6 +68,7 @@ export interface ICubredescansos {
   sistema: string;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface ICubredescansosTurnos {
@@ -73,6 +79,7 @@ export interface ICubredescansosTurnos {
   servicios_a_cubrir?: any;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface IJornadasExcepcionales {
@@ -85,6 +92,7 @@ export interface IJornadasExcepcionales {
   dias_servicio?: any;
   created_at: Date;
   updated_at: Date;
+  estado: boolean;
 }
 
 export interface IPeriodosRol {
@@ -92,4 +100,15 @@ export interface IPeriodosRol {
   fecha_inicio: Date;
   fecha_fin: Date;
   periodo?: number;
+}
+
+export interface IBitacora {
+  id: number;
+  tabla: string;
+  accion: string;
+  usuario?: string;
+  updated_at: Date;
+  datos_old?: any;
+  datos_new?: any;
+  metadata?: any;
 }

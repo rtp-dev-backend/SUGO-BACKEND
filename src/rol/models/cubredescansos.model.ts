@@ -34,6 +34,11 @@ export const cubredescansos = SUGO_sequelize_connection.define<any, Cubredescans
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     timestamps: false,
