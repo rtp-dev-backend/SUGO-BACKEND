@@ -18,6 +18,7 @@ export interface PVestados {
     ruta_modalidad?: string;
     ruta_cc?:        string;
     op_cred?:        number;
+    hora_entrada_operador?: string;  
     op_turno?:       number;
     extintor?:       string;
     estatus:         number;
@@ -151,6 +152,9 @@ export const  pv_estados = SUGO_sequelize_connection.define<any,PVestados_ModelI
         },
         registro_id: {
             type: DataTypes.INTEGER,
+        },
+        hora_entrada_operador: {
+            type: DataTypes.TIME,
         },
     },
     {

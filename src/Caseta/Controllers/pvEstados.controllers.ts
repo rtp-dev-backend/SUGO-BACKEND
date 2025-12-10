@@ -23,6 +23,7 @@ interface GetQueryParams{
     ruta?: string,
     ruta_modalidad?: string,
     op_cred?: number,
+    entrada_operador?: string;  
     estatus?: number, 
     motivo_id?: number,
     motivo_tipo?: 1|2,
@@ -258,7 +259,6 @@ export const createNewEstado = async (req: Request, res: Response) => {
                 },
                 transaction
             });
-
             // Crear nuevo registro
             const newEdo = await pv_estados.create({...nuevoReg, estatus: 1 }, { transaction });
             respuesta = { newEdo };
