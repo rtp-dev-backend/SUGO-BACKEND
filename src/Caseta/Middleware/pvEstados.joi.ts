@@ -43,6 +43,7 @@ export const ValidarNewEstado = J.object({
     ruta_modalidad: J.string(),
     ruta_cc:        J.string(),
     op_cred:        J.number().integer(),
+    hora_entrada_operador: J.string(),
     op_turno:       J.number().integer(),
     extintor:       J.string(),
     // estatus:        J.number().integer().required(),
