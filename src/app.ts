@@ -28,6 +28,7 @@ import RegistrosCasetaRolRouter from "./Caseta/Routes/RegistrosCasetaRol.routes"
 import rutas_autorizadas from "./General/routes/rutas.routes";
 
 import turnos from "./General/routes/turnos.routes";
+import Motivos from "./caseta_/Routes/motivos.routes";
 
 const app = express();
 
@@ -73,5 +74,6 @@ app.use("/api/caseta/", pvEstado);
 app.use("/api/caseta/", pvEcos);
 
 app.use("/api/turnos", turnos);
+app.use("/api/motivos", Motivos);
 
 export default app;
