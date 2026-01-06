@@ -1,4 +1,11 @@
 export interface Catalogos_motivos {
+  id: number;
   desc: string;
-  estatus: number;
+  tipo: number;
+  eco_disponible: boolean;
+  createdBy: number;
+  updatedBy?: number;
+  prev_values?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
