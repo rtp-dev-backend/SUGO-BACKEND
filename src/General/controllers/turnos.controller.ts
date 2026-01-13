@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { obtenerTurnos } from "../services/turnos.sevice";
+import { obtenerTurnos } from "../services/turnos.service";
 
 export const turnos = async (req: Request, res: Response) => {
   try {

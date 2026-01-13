@@ -1,3 +1,4 @@
+import { Pv_estados } from "./General/models/Pv_estados.model";
 import path from "path";
 import fileUpload from "express-fileupload";
 import express from "express";
@@ -29,6 +30,9 @@ import rutas_autorizadas from "./General/routes/rutas.routes";
 
 import turnos from "./General/routes/turnos.routes";
 import Motivos from "./caseta_/Routes/motivos.routes";
+
+// importar pv_estados
+import pv_estado from "./General/routes/Pv_estados.routes";
 
 const app = express();
 
@@ -75,5 +79,6 @@ app.use("/api/caseta/", pvEcos);
 
 app.use("/api/turnos", turnos);
 app.use("/api/motivos", Motivos);
+app.use("/api/pv_estados", pv_estado);
 
 export default app;
