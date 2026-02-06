@@ -6,7 +6,7 @@ interface modulos {
     id: number,
     mod_clave: number,
     modulo: string,
-    descripcion: string
+    descripcion: string 
 }
 
 export const Catalogo_modulos = SUGO_sequelize_connection.define<any, modulos>(

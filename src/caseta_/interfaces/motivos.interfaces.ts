@@ -8,4 +8,6 @@ export interface Catalogos_motivos {
   prev_values?: string;
   createdAt: Date;
   updatedAt: Date;
+  
+
 }

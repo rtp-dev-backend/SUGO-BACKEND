@@ -30,6 +30,7 @@ import rutas_autorizadas from "./General/routes/rutas.routes";
 
 import turnos from "./General/routes/turnos.routes";
 import Motivos from "./caseta_/Routes/motivos.routes";
+import ModulosController from "./despacho/routes/modulos.routes";
 
 // importar pv_estados
 import pv_estado from "./General/routes/Pv_estados.routes";
@@ -48,7 +49,7 @@ app.use(
     //     useTempFiles : true,
     //     // tempFileDir : '/tmp/',
     //     // createParentPath: true
-  })
+  }),
 );
 
 //& Rutas
@@ -79,6 +80,8 @@ app.use("/api/caseta/", pvEcos);
 
 app.use("/api/turnos", turnos);
 app.use("/api/motivos", Motivos);
+app.use("/api/modulos", ModulosController);
 app.use("/api/pv_estados", pv_estado);
 
 export default app;
+// integrar en app.ts

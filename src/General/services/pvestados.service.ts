@@ -4,6 +4,6 @@ export async function obtenerPvEstados() {
   return await Pv_estados.findAll({
     where: { op_turno: 1 },
     order: [["momento", "DESC"]],
-    limit: 100,
+    limit: 1000,
   });
 }
