@@ -31,6 +31,7 @@ import rutas_autorizadas from "./General/routes/rutas.routes";
 import turnos from "./General/routes/turnos.routes";
 import Motivos from "./caseta_/Routes/motivos.routes";
 import ModulosController from "./despacho/routes/modulos.routes";
+import ModalidadesController from "./despacho/routes/modalidades.routes";
 
 // importar pv_estados
 import pv_estado from "./General/routes/Pv_estados.routes";
@@ -77,10 +78,12 @@ app.use(ecosBitacora);
 app.use(view_trabajador);
 app.use("/api/caseta/", pvEstado);
 app.use("/api/caseta/", pvEcos);
-
+// apis para turnos, motivos y modulos
 app.use("/api/turnos", turnos);
 app.use("/api/motivos", Motivos);
 app.use("/api/modulos", ModulosController);
+app.use("/api/modalidades", ModalidadesController);
+// termino de apis
 app.use("/api/pv_estados", pv_estado);
 
 export default app;
