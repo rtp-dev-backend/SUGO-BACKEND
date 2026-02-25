@@ -5,6 +5,8 @@ import { ValidarnewEcoEstado } from '../Middleware/newEstadoForEco_POST.joi';
 import { createMotivo, createNewEstado, createNewTopEstado, deleteEstado, deleteMotivo, getEstados, getModulosSWAP, getMotivos, viewPVController } from '../Controllers/pvEstados.controllers';
 import { ValidarEliminarRegistro, ValidarNewEstado, ValidarNewMotivo, ValidarViewPV } from '../Middleware/pvEstados.joi';
 
+// 
+
 const router = Router();
 
 

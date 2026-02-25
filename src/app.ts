@@ -34,7 +34,7 @@ import ModulosController from "./despacho/routes/modulos.routes";
 import ModalidadesController from "./despacho/routes/modalidades.routes";
 
 // importar pv_estados
-import pv_estado from "./General/routes/Pv_estados.routes";
+import pvEstadosPrueba from "./despacho/routes/pvEstadosPrueba.routes";
 
 const app = express();
 
@@ -84,7 +84,7 @@ app.use("/api/motivos", Motivos);
 app.use("/api/modulos", ModulosController);
 app.use("/api/modalidades", ModalidadesController);
 // termino de apis
-app.use("/api/pv_estados", pv_estado);
+app.use("/api/caseta/", pvEstadosPrueba);
 
 export default app;
 // integrar en app.ts
